@@ -1,0 +1,26 @@
+{
+    "Version": "1.0",
+    "Sections": [
+        {
+            "Name": "Features",
+            "Description": "Change the rules for racial modifiers during character creation. These will be applied after character creation is finished.",
+            "IsAdvanced": false,
+            "Keys":
+            [
+                {
+                    "Options": [
+                    "Classic",
+                    "Modern",
+                    "Off",
+                    ],
+                    "Value": 0,
+                    "Name": "Rules",
+                    "Description": "Choose which set of rules to use. See mod description for the rule sets.",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.MultipleChoiceKey"
+                },                
+            ],
+            "$version": "v1"
+        }
+    ]
+}

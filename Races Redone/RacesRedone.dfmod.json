@@ -1,0 +1,15 @@
+{
+    "ModTitle": "Races Redone",
+    "ModVersion": "1.0",
+    "ModAuthor": "Ralzar",
+    "ContactInfo": "forums.dfworkshop.net",
+    "DFUnity_Version": "0.10.22",
+    "ModDescription": "Read more about the rulesets here: https://forums.dfworkshop.net/viewtopic.php?f=12&t=3484",
+    "GUID": "4cbdb380-ff7f-4713-9f56-307d44be99f9",
+    "Files": [
+        "Assets/Game/Mods/Races Redone/RacesRedone.cs",
+        "Assets/Game/Mods/Races Redone/modsettings.json"
+    ],
+    "Contributes": null,
+    "Dependencies": null
+}
