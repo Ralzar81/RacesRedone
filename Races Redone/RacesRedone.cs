@@ -6,17 +6,15 @@
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Formulas;
-using DaggerfallWorkshop.Game.MagicAndEffects;
-using DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using UnityEngine;
 using DaggerfallWorkshop.Game.Utility;
 using System;
-using System.Collections.Generic;
 using DaggerfallConnect;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
+using DaggerfallWorkshop;
 
 namespace RacesRedone
 {
@@ -32,7 +30,6 @@ namespace RacesRedone
             var go = new GameObject(mod.Title);
             go.AddComponent<RacesRedone>();
             StartGameBehaviour.OnStartGame += RacesRedone_OnStartGame;
-            EntityEffectBroker.OnNewMagicRound += RaceAbilities_OnNewMagicRound;
         }
 
         static bool classic = false;
@@ -48,6 +45,8 @@ namespace RacesRedone
         static int willpower;
         static bool male;
         static bool dumbPlayer;
+
+        PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
 
         void Awake()
         {
@@ -142,8 +141,17 @@ namespace RacesRedone
                     return mods;
                 });
             }
-        }
+        }        
 
+        void Update()
+        {
+            if (!DaggerfallUnity.Instance.IsReady || GameManager.IsGamePaused)
+                return;
+            if (modern && playerEntity.CurrentBreath < playerEntity.MaxBreath && playerEntity.BirthRaceTemplate.ID == (int)Races.Argonian)
+                {
+                    playerEntity.SetBreath(playerEntity.MaxBreath);
+                }
+        }
 
         private static void RacesRedone_OnStartGame(object sender, EventArgs e)
         {
@@ -357,7 +365,7 @@ namespace RacesRedone
                 Debug.Log("[Races Redone] Is HighElf");
                 playerEntity.RaceTemplate.ResistanceFlags = DFCareer.EffectFlags.Disease;
                 playerEntity.RaceTemplate.LowToleranceFlags = (byte)DFCareer.EffectFlags.Shock+(byte)DFCareer.EffectFlags.Magic+(byte)DFCareer.EffectFlags.Fire+DFCareer.EffectFlags.Frost;
-                playerEntity.Career.SpellPointMultiplierValue += 1.5f;
+                playerEntity.Career.SpellPointMultiplierValue += 1f;
                 intelligence += 10;
                 willpower += 10;
                 agility += 10;
@@ -483,24 +491,6 @@ namespace RacesRedone
             dumbPlayer = false;
             string[] messages = new string[] { "Your racial modifiers have reduced an Attribute to 0, which kills you." };
             StatusPopup(messages);
-        }
-
-        private static void RaceAbilities_OnNewMagicRound()
-        {
-            PlayerEntity playerEntity = GameManager.Instance.PlayerEntity;
-            if (playerEntity.CurrentHealth > 0
-                && !playerEntity.IsResting
-                && !DaggerfallUI.Instance.FadeBehaviour.FadeInProgress
-                && !GameManager.Instance.EntityEffectBroker.SyntheticTimeIncrease
-                && !GameManager.IsGamePaused)
-            {
-                if (GameManager.Instance.PlayerEnterExit.IsPlayerSubmerged
-                && (playerEntity.BirthRaceTemplate.ID == (int)Races.Argonian || playerEntity.RaceTemplate.ID == (int)Races.Argonian))
-                    {
-                    playerEntity.SetBreath(playerEntity.MaxBreath);
-                    Debug.Log("[Races Redone] Argonian WaterBreathing");
-                    }
-            }
         }
 
         static DaggerfallMessageBox tempInfoBox;
