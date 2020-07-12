@@ -29,7 +29,6 @@ namespace RacesRedone
             mod = initParams.Mod;
             var go = new GameObject(mod.Title);
             go.AddComponent<RacesRedone>();
-            StartGameBehaviour.OnStartGame += RacesRedone_OnStartGame;
         }
 
         static bool classic = false;
@@ -55,6 +54,7 @@ namespace RacesRedone
             classic = (rules == 0);
             modern = (rules == 1);
             mod.IsReady = true;
+            StartGameBehaviour.OnStartGame += RacesRedone_OnStartGame;
             Debug.Log("[Races Redone] Classic Rules = " + classic.ToString());
             Debug.Log("[Races Redone] Modern Rules = " + modern.ToString());
             Debug.Log("[Races Redone] Ready");
@@ -149,7 +149,7 @@ namespace RacesRedone
                 return;
             if (modern && playerEntity.CurrentBreath < playerEntity.MaxBreath && playerEntity.BirthRaceTemplate.ID == (int)Races.Argonian)
                 {
-                    playerEntity.SetBreath(playerEntity.MaxBreath);
+                    playerEntity.CurrentBreath = playerEntity.MaxBreath;
                 }
         }
 
@@ -160,15 +160,18 @@ namespace RacesRedone
 
             if (classic)
             {
+                DaggerfallUI.MessageBox("Races Redone applying Classic Rules");
                 ClassicRules();
-                Debug.Log("[Races Redone] Character Adjusted by Classic Rules");
             }
             else if (modern)
             {
+                DaggerfallUI.MessageBox("Races Redone applying Modern Rules");
                 ModernRules();
-                Debug.Log("[Races Redone] Character Adjusted by Modern Rules");
             }
-            else { Debug.Log("[Races Redone] No Rules. Character NOT adjusted."); }                     
+            else
+            {
+                DaggerfallUI.MessageBox("Races Redone applying No Rules");
+            }                     
         }
 
 
